@@ -21,6 +21,9 @@ class Ui_MainWindow(object):
         self.position_1 = [90,90,90,90]
         self.position_2 = [90,90,90,90]
         self.go_there = True
+        
+        #### Bunun aşağısı PyQt5
+        
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(822, 558)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -78,6 +81,8 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        ####### Bunun yukarısı PyQt5
+        
         self.servo_1.valueChanged.connect(self.pos)
         self.servo_2.valueChanged.connect(self.pos)
         self.servo_3.valueChanged.connect(self.pos)
@@ -159,6 +164,7 @@ class Ui_MainWindow(object):
                 break
         '''
 
+    # Sliderlar hareket ettiği zaman bu fonksiyon çalışır.
     def pos(self):
 #        if self.go_there:
         self.value1 = self.servo_1.sliderPosition()
@@ -174,14 +180,17 @@ class Ui_MainWindow(object):
         self.servo_3.setValue(slider_pos[2])
         self.servo_4.setValue(slider_pos[3])
 
+    # Save_1'e basıldıktan sonra bu fonksiyon çalışır.
     def pos_save_1(self):
         self.position_1 = [self.value1, self.value2, self.value3, self.value4]
         print(self.position_1)
 
+    # Save_2'ye basıldıktan sonra bu fonksiyon çalışır.
     def pos_save_2(self):
         self.position_2 = [self.value1, self.value2, self.value3, self.value4]
         print(self.position_2)
 
+    # 1'e basıldıktan sonra bu fonksiyon çalışır.
     def go_pos_1(self):
         #self.smoother()
         self.servo_writer(self.position_1)
@@ -190,7 +199,8 @@ class Ui_MainWindow(object):
         self.go_slider(self.position_1)
         self.go_there = True
         '''
-
+    
+    # 2'ye basıldıktan sonra bu fonksiyon çalışır.
     def go_pos_2(self):
         #self.smoother()
         self.servo_writer(self.position_2)
@@ -199,6 +209,10 @@ class Ui_MainWindow(object):
         self.go_slider(self.position_2)
         self.go_there = True
         '''
+    
+    
+    #### Bunun aşağısı Pyqt5 
+    
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "METU MECH"))
