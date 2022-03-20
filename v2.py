@@ -117,7 +117,10 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked.connect(self.pos_save_1)
         self.pushButton_4.clicked.connect(self.pos_save_2)
 
-
+    
+    ### ÖNEMLİ KISIM BUNDAN SONRA BAŞLIYOR
+        
+        
     # Motorları açı değerlerini birer birer arttırarak kaydedilen pozisyona götürüyoruz.
     def smoother(self, saved_pos, current_pos):
 
