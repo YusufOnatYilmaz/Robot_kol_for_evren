@@ -117,28 +117,36 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked.connect(self.pos_save_1)
         self.pushButton_4.clicked.connect(self.pos_save_2)
 
-    
-    ### ÖNEMLİ KISIM BUNDAN SONRA BAŞLIYOR
-        
-        
+
     # Motorları açı değerlerini birer birer arttırarak kaydedilen pozisyona götürüyoruz.
     def smoother(self, saved_pos, current_pos):
+
 
         adder = []
         for i in range(len(saved_pos)):
             temp = -1 if saved_pos[i] < current_pos[i] else 1 if saved_pos[i] > current_pos[i] else 0
             adder.append(temp)
 
+        smoothing_factor = []
+        for i in range(len(saved_pos)):
+            smoothing_factor.append(abs(saved_pos[i] - current_pos[i])/100)
+
+        saved_pos_factor = 0.03
+        
         while True:
 
             for i in range(len(saved_pos)):
-                if saved_pos[i] != current_pos[i]:
-                    pin_array[i].write(current_pos[i] + adder[i])
-                    current_pos[i] += adder[i]
+                if abs(saved_pos[i] - current_pos[i]) >   smoothing_factor[i]:
+                    servo_smoothed = saved_pos[i]*saved_pos_factor + current_pos[i]*(1-saved_pos_factor)
+                    pin_array[i].write(servo_smoothed)
+                    current_pos[i] = servo_smoothed
+                    #pin_array[i].write(current_pos[i] + adder[i])
+                    #current_pos[i] += adder[i]
             
-            board.pass_time(0.01)
+            board.pass_time(0.02)
             print(saved_pos, current_pos)
-            if saved_pos[0] == current_pos[0] and saved_pos[1] == current_pos[1] and saved_pos[2] == current_pos[2] and saved_pos[3] == current_pos[3]:
+            if (abs(saved_pos[0] - current_pos[0]) <= smoothing_factor[0]) and (abs(saved_pos[1] - current_pos[1]) <= smoothing_factor[1]) and (abs(saved_pos[2] - current_pos[2]) <= smoothing_factor[2]) and (abs(saved_pos[3] - current_pos[3]) <= smoothing_factor[3]):
+                self.go_slider(current_pos)
                 break
 
     # Sliderlar hareket ettiği zaman bu fonksiyon çalışır.
@@ -157,10 +165,10 @@ class Ui_MainWindow(object):
 
 
     def go_slider(self, slider_pos):
-        self.servo_1.setValue(slider_pos[0])
-        self.servo_2.setValue(slider_pos[1])
-        self.servo_3.setValue(slider_pos[2])
-        self.servo_4.setValue(slider_pos[3])
+        self.servo_1.setValue(int(slider_pos[0]))
+        self.servo_2.setValue(int(slider_pos[1]))
+        self.servo_3.setValue(int(slider_pos[2]))
+        self.servo_4.setValue(int(slider_pos[3]))
 
 
     # Save_1'e basıldıktan sonra bu fonksiyon çalışır.
