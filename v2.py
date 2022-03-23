@@ -118,14 +118,8 @@ class Ui_MainWindow(object):
         self.pushButton_4.clicked.connect(self.pos_save_2)
 
 
-    # Motorları açı değerlerini birer birer arttırarak kaydedilen pozisyona götürüyoruz.
+    # Motorları açı değerlerini smoothing işlemine sokuyoruz sonra o pozisyona götürüyoruz.
     def smoother(self, saved_pos, current_pos):
-
-
-        adder = []
-        for i in range(len(saved_pos)):
-            temp = -1 if saved_pos[i] < current_pos[i] else 1 if saved_pos[i] > current_pos[i] else 0
-            adder.append(temp)
 
         smoothing_factor = []
         for i in range(len(saved_pos)):
@@ -137,11 +131,10 @@ class Ui_MainWindow(object):
 
             for i in range(len(saved_pos)):
                 if abs(saved_pos[i] - current_pos[i]) >   smoothing_factor[i]:
+                    # smoothing işlemi
                     servo_smoothed = saved_pos[i]*saved_pos_factor + current_pos[i]*(1-saved_pos_factor)
                     pin_array[i].write(servo_smoothed)
                     current_pos[i] = servo_smoothed
-                    #pin_array[i].write(current_pos[i] + adder[i])
-                    #current_pos[i] += adder[i]
             
             board.pass_time(0.02)
             print(saved_pos, current_pos)
